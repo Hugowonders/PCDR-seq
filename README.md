@@ -13,11 +13,10 @@ WD=~/PCDR-seq
 This is the default working diretory for data storage and analysis. You can also allocate another directory while the filepath should be declared when running the code.
 
 ## Software installation
-For dependency management, we prefer to use [bioconda](https://anaconda.org/bioconda) for software installation.
-
+For dependency management, we prefer to use [bioconda](https://anaconda.org/bioconda) for software installation
 [Fastp](https://github.com/OpenGene/fastp) is adopted for sequencing quality control.
 [![install with conda](
-https://anaconda.org/bioconda/fastp/badges/version.svg)](https://anaconda.org/bioconda/fastp)
+https://anaconda.org/bioconda/fastp/badges/version.svg)](https://anaconda.org/bioconda/fastp).
 ```shell
 conda install -c bioconda fastp
 ```
@@ -32,9 +31,10 @@ make
 # now the excutable file named "flash" can be copied to the working directory
 cp flash $WD
 ```
-[Seqkit](https://bioinf.shenwei.me/seqkit) is used for PCDR amplicon separation through a regular expression matching pipeline. The newest version of Seqkit can be easilyt installed unsing bioconda.
+
+[Seqkit](https://bioinf.shenwei.me/seqkit) is used for PCDR amplicon separation through a regular expression matching pipeline. The newest version of Seqkit can be easilyt installed unsing bioconda
 [![install with conda](
-https://anaconda.org/bioconda/seqkit/badges/version.svg)](https://anaconda.org/bioconda/seqkit)
+https://anaconda.org/bioconda/seqkit/badges/version.svg)](https://anaconda.org/bioconda/seqkit).
 ```shell
 conda install -c bioconda seqkit
 ```
@@ -52,9 +52,6 @@ FASTQ files of 2800M control DNA are accessible in the Sequence Read Archive dat
 wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.0/sratoolkit.3.0.0-ubuntu64.tar.gz && \
 # unzip it
 tar zxvf sratoolkit.3.0.0-ubuntu64.tar.gz
-# download data using the prefetch tool
+# download data using the prefetch utility
 ./sratoolkit.3.0.0-ubuntu64.tar.gz/bin/prefetch SRR20218109 $WD
 ```
-
-
-
