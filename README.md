@@ -4,4 +4,6 @@ This repository is a supplementary for the manuscript entitled "Characterizing t
 Codes in this script were tested on a AMD Ryzen PC running Ubuntu 20.04. Other UNIX/LINUX platforms are plausible but the performance is not guaranteed.
 
 ## Software installation
-First, [Fastp](https://github.com/OpenGene/fastp) is adopted 
+First, [Fastp](https://github.com/OpenGene/fastp) is adopted for sequencing quality control.
+[![install with conda](
+https://anaconda.org/bioconda/fastp/badges/version.svg)](https://anaconda.org/bioconda/fastp)
