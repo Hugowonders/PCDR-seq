@@ -1,5 +1,5 @@
 # PCDR-seq
-This repository is a supplementary for the manuscript entitled "Characterizing the amplification of STR markers in multiplex polymerase chain displacement reaction using massively parallel sequencing". The scripts below demonstrate how to obtain STR information from pair-end Illumina FASTQ files of PCDR products for each type of amplicons ab initio. First, sequencing quality is checked using [Fastp](https://github.com/OpenGene/fastp). Then, pair-end reads are merged using a modified version of [FLASH 1.2.11](https://github.com/Jerrythafast/FLASH-lowercase-overhang). Next, [Seqkit](https://bioinf.shenwei.me/seqkit) is used to separate different PCDR amplicons from the merged FASTQ file. Finally, STR were genotyped using [FDSTools](https://fdstools.nl/). 
+This repository is a supplementary for the manuscript entitled "Characterizing the amplification of STR markers in multiplex polymerase chain displacement reaction using massively parallel sequencing". The scripts below demonstrate how to obtain STR information from pair-end Illumina FASTQ files of PCDR products for each type of amplicons ab initio. First, sequencing quality is checked using [Fastp](https://github.com/OpenGene/fastp). Then, pair-end reads are merged using a modified version of [FLASH 1.2.11](https://github.com/Jerrythafast/FLASH-lowercase-overhang). Next, [SeqKit](https://bioinf.shenwei.me/seqkit) is used to separate different PCDR amplicons from the merged FASTQ file. Finally, STR were genotyped using [FDSTools](https://fdstools.nl/). 
 
 Codes in this script were tested on an AMD Ryzen PC running Ubuntu 20.04. Other UNIX/Linux systems are plausible but the performance is not guaranteed. Please not that the script is an early-stage implementation, please contact the corresponding author of the manuscript if you encounter any bugs.
 
@@ -32,7 +32,7 @@ make
 cp flash $WD
 ```
 
-[Seqkit](https://bioinf.shenwei.me/seqkit) is used for PCDR amplicon separation through a regular expression matching pipeline. The newest version of Seqkit can be easilyt installed unsing bioconda
+[SeqKit](https://bioinf.shenwei.me/seqkit) is used for PCDR amplicon separation through a regular expression matching pipeline. The newest version of Seqkit can be easilyt installed unsing bioconda
 [![install with conda](
 https://anaconda.org/bioconda/seqkit/badges/version.svg)](https://anaconda.org/bioconda/seqkit).
 ```shell
@@ -52,6 +52,6 @@ FASTQ files of 2800M control DNA are accessible in the Sequence Read Archive dat
 wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.0/sratoolkit.3.0.0-ubuntu64.tar.gz && \
 # unzip it
 tar zxvf sratoolkit.3.0.0-ubuntu64.tar.gz
-# download data using the prefetch utility
-./sratoolkit.3.0.0-ubuntu64.tar.gz/bin/prefetch SRR20218109 $WD
+# download data to the working directory using the prefetch utility
+./sratoolkit.3.0.0-ubuntu64.tar.gz/bin/prefetch SRR20218109 -O $WD
 ```
