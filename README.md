@@ -40,8 +40,21 @@ conda install -c bioconda seqkit
 ```
 
 [FDSTools](https://fdstools.nl/) is a software package for forensisc sequencing data analysis. The software is written in Python and can be installed using `pip`. Please make sure Python 3 are available on your system.
-```
+```shell
 pip install fdstools
 ```
 To install the latest version, you need to make sure you're installing using `pip3` if you have installed both Python 2 and Python 3.
+
+## Sequencing data
+FASTQ files of 2800M control DNA are accessible in the Sequence Read Archive database (SRR20218109 in BioProject PRJNA858989). We recommed to download the whole archive using [SRA Toolkit](https://github.com/ncbi/sra-tools).
+```shell
+# download the pre-compiled version
+wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.0/sratoolkit.3.0.0-ubuntu64.tar.gz && \
+# unzip it
+tar zxvf sratoolkit.3.0.0-ubuntu64.tar.gz
+# download data using the prefetch tool
+./sratoolkit.3.0.0-ubuntu64.tar.gz/bin/prefetch SRR20218109 $WD
+```
+
+
 
