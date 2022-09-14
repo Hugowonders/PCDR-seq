@@ -39,3 +39,9 @@ https://anaconda.org/bioconda/seqkit/badges/version.svg)](https://anaconda.org/b
 conda install -c bioconda seqkit
 ```
 
+[FDSTools](https://fdstools.nl/) is a software package for forensisc sequencing data analysis. The software is written in Python and can be installed using `pip`. Please make sure Python 3 are available on your system.
+```
+pip install fdstools
+```
+To install the latest version, you need to make sure you're installing using `pip3` if you have installed both Python 2 and Python 3.
+
