@@ -1,12 +1,14 @@
 # PCDR-seq
 This repository is a supplementary for the manuscript entitled "Characterizing the amplification of STR markers in multiplex polymerase chain displacement reaction using massively parallel sequencing". The scripts below demonstrate how to obtain STR information from pair-end Illumina FASTQ files of PCDR products for each type of amplicons ab initio. First, sequencing quality is checked using [Fastp](https://github.com/OpenGene/fastp). Then, pair-end reads are merged using a modified version of [FLASH 1.2.11](https://github.com/Jerrythafast/FLASH-lowercase-overhang). Next, [Seqkit](https://bioinf.shenwei.me/seqkit) is used to separate different PCDR amplicons from the merged FASTQ file. Finally, STR were genotyped using [FDSTools](https://fdstools.nl/). 
 
-Codes in this script were tested on a AMD Ryzen PC running Ubuntu 20.04. Other UNIX/Linux systems are plausible but the performance is not guaranteed. Please not that the script is an early-stage implementation, please contact the corresponding author of the manuscript if you encounter any bugs.
+Codes in this script were tested on an AMD Ryzen PC running Ubuntu 20.04. Other UNIX/Linux systems are plausible but the performance is not guaranteed. Please not that the script is an early-stage implementation, please contact the corresponding author of the manuscript if you encounter any bugs.
 
 ## Working directory
 Fisrt let's create a "PCDR-seq" directory.
 ```shell
-mkdir PCDR-seq
+mkdir ~/PCDR-seq
+#set this directory as variable $WD
+WD=~/PCDR-seq
 ```
 This is the default working diretory for data storage and analysis. You can also allocate another directory while the filepath should be declared when running the code.
 
@@ -28,6 +30,12 @@ cd FLASH-lowercase-overhang
 # compile the files
 make
 # now the excutable file named "flash" can be copied to the working directory
-cp flash ..
+cp flash $WD
+```
+[Seqkit](https://bioinf.shenwei.me/seqkit) is used for PCDR amplicon separation through a regular expression matching pipeline. The newest version of Seqkit can be easilyt installed unsing bioconda.
+[![install with conda](
+https://anaconda.org/bioconda/seqkit/badges/version.svg)](https://anaconda.org/bioconda/seqkit)
+```shell
+conda install -c bioconda seqkit
 ```
 
