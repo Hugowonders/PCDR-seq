@@ -3,6 +3,13 @@ This repository is a supplementary for the manuscript entitled "Characterizing t
 
 Codes in this script were tested on a AMD Ryzen PC running Ubuntu 20.04. Other UNIX/Linux systems are plausible but the performance is not guaranteed. Please not that the script is an early-stage implementation, please contact the corresponding author of the manuscript if you encounter any bugs.
 
+## Working directory
+Fisrt let's create a "PCDR-seq" directory.
+```shell
+mkdir PCDR-seq
+```
+This is the default working diretory for data storage and analysis. You can also allocate another directory while the filepath should be declared when running the code.
+
 ## Software installation
 For dependency management, we prefer to use [bioconda](https://anaconda.org/bioconda) for software installation.
 
@@ -20,6 +27,7 @@ git clone https://github.com/Jerrythafast/FLASH-lowercase-overhang.git
 cd FLASH-lowercase-overhang
 # compile the files
 make
-# now the excutable *flash* file can be copied to the working directory
+# now the excutable file named "flash" can be copied to the working directory
+cp flash ..
 ```
 
