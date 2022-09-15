@@ -54,4 +54,8 @@ wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.0/sratoolkit.3.0.0-ubuntu64.
 tar zxvf sratoolkit.3.0.0-ubuntu64.tar.gz
 # download data to the working directory using the prefetch utility
 ./sratoolkit.3.0.0-ubuntu64.tar.gz/bin/prefetch SRR20218109 -O $WD
+# unzip the .sra file and copy all fatq.gz files to the working directory
+./sratoolkit.3.0.0-ubuntu64.tar.gz/bin/fastq-dump --gzip --split-3 $WD/SRR20218109/SRR20218109.sra && \
+cp $WD/SRR20218109/*.fastq.gz $WD
 ```
+
