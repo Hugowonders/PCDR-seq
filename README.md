@@ -48,17 +48,17 @@ pip install fdstools
 To install the latest version, you need to make sure you're installing using `pip3` if you have installed both Python 2 and Python 3.
 
 ## Sequencing data
-FASTQ files of 2800M control DNA are accessible in the Sequence Read Archive database (SRR20218109 in BioProject PRJNA858989). We recommed to download the whole archive using [SRA Toolkit](https://github.com/ncbi/sra-tools).
+FASTQ files of 2800M control DNA amplified by PCDR are accessible in the Sequence Read Archive database (SRR21589082 in BioProject PRJNA858989). We recommed to download the whole archive using [SRA Toolkit](https://github.com/ncbi/sra-tools).
 ```shell
 # download the pre-compiled version
 wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.0/sratoolkit.3.0.0-ubuntu64.tar.gz && \
 # unzip it
 tar zxvf sratoolkit.3.0.0-ubuntu64.tar.gz
 # download data to the working directory using the prefetch utility
-./sratoolkit.3.0.0-ubuntu64.tar.gz/bin/prefetch SRR20218109 -O $WD
+./sratoolkit.3.0.0-ubuntu64.tar.gz/bin/prefetch SRR21589082 -O $WD
 # unzip the .sra file and copy all fatq.gz files to the working directory
-./sratoolkit.3.0.0-ubuntu64.tar.gz/bin/fastq-dump --gzip --split-3 $WD/SRR20218109/SRR20218109.sra && \
-cp $WD/SRR20218109/*.fastq.gz $WD
+./sratoolkit.3.0.0-ubuntu64.tar.gz/bin/fastq-dump --gzip --split-3 $WD/SRR21589082/SRR21589082.sra && \
+cp $WD/SRR21589082/*.fastq.gz $WD
 ```
 In following sections, we would take the two PCDR files in the archive, namely 2800M_PCDR_read1.fastq.gz and 2800M_PCDR_read2.fastq.gz as an example to introduce the data analysis process in detail.
 
@@ -76,5 +76,6 @@ fastp -i 2800M_PCDR_read1.fastq.gz -I 2800M_PCDR_read2.fastq.gz -l 60 --dont_eva
 ## Merging paired reads
 Next we use FLASH to merge paired reads. Note that the `--lowercase-overhang` (`-l`) is used so that truncated STR merging can be identified.
 ```
+# merge paired reads with the miniumum overlap between two reads (`-m`) of 5 bp and the maximum overlap (`-M`) of 250 bp. The maximum mismatch density (`-x`) was set as 0.2.
 ./flash 2800m_rd1.fq.gz 2800m_rd2.fq.gz -l -m 5 -x 0.2 -M 250 -O -z -d $WD -o 2800m.fq.gz
 ```
