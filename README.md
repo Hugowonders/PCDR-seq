@@ -4,7 +4,7 @@ This repository is a supplementary for the manuscript entitled "Characterizing t
 Codes in this script were tested on an AMD Ryzen PC running Ubuntu 20.04. Other UNIX/Linux systems are plausible but the performance is not guaranteed. Please not that the script is an early-stage implementation, please contact the corresponding author of the manuscript if you encounter any bugs.
 
 ## Working directory
-Fisrt let's create a "PCDR-seq" directory.
+Fisrt let's create a directory named "PCDR-seq".
 ```shell
 mkdir ~/PCDR-seq
 #set this directory as variable $WD
@@ -30,7 +30,7 @@ cd FLASH-lowercase-overhang
 # compile the files
 make
 # now the excutable file named "flash" can be copied to the working directory
-cp flash $WD
+cp ./flash $WD
 ```
 
 [SeqKit](https://bioinf.shenwei.me/seqkit) is used for PCDR amplicon separation through a regular expression matching pipeline. The newest version of Seqkit can be easilyt installed unsing bioconda.
@@ -60,4 +60,21 @@ tar zxvf sratoolkit.3.0.0-ubuntu64.tar.gz
 ./sratoolkit.3.0.0-ubuntu64.tar.gz/bin/fastq-dump --gzip --split-3 $WD/SRR20218109/SRR20218109.sra && \
 cp $WD/SRR20218109/*.fastq.gz $WD
 ```
+In following sections, we would take the two PCDR files in the archive, namely 2800M_PCDR_read1.fastq.gz and 2800M_PCDR_read2.fastq.gz as an example to introduce the data analysis process in detail.
 
+## Quality control
+First we use fastp to remove low-quality reads and reads less than 60 nt.
+```
+# activate conda enviroment
+conda activate
+
+# quality control of paired fastq files.
+fastp -i 2800M_PCDR_read1.fastq.gz -I 2800M_PCDR_read2.fastq.gz -l 60 --dont_eval_duplication \
+-o 2800m_rd1.fq.gz -O 2800m_rd2.fq.gz
+```
+
+## Merging paired reads
+Next we use FLASH to merge paired reads. Note that the `--lowercase-overhang` (`-l`) is used so that truncated STR merging can be identified.
+```
+./flash 2800m_rd1.fq.gz 2800m_rd2.fq.gz -l -m 5 -x 0.2 -M 250 -O -z -d $WD -o 2800m.fq.gz
+```
