@@ -15,8 +15,9 @@ This is the default working diretory for data storage and analysis. You can also
 ## Software installation
 For dependency management, we prefer to use [bioconda](https://anaconda.org/bioconda) for software installation
 [Fastp](https://github.com/OpenGene/fastp) is adopted for sequencing quality control.
+***
 [![install with conda](
-https://anaconda.org/bioconda/fastp/badges/version.svg)](https://anaconda.org/bioconda/fastp).
+https://anaconda.org/bioconda/fastp/badges/version.svg)](https://anaconda.org/bioconda/fastp)
 ```shell
 conda install -c bioconda fastp
 ```
@@ -32,9 +33,10 @@ make
 cp flash $WD
 ```
 
-[SeqKit](https://bioinf.shenwei.me/seqkit) is used for PCDR amplicon separation through a regular expression matching pipeline. The newest version of Seqkit can be easilyt installed unsing bioconda
+[SeqKit](https://bioinf.shenwei.me/seqkit) is used for PCDR amplicon separation through a regular expression matching pipeline. The newest version of Seqkit can be easilyt installed unsing bioconda.
+***
 [![install with conda](
-https://anaconda.org/bioconda/seqkit/badges/version.svg)](https://anaconda.org/bioconda/seqkit).
+https://anaconda.org/bioconda/seqkit/badges/version.svg)](https://anaconda.org/bioconda/seqkit)
 ```shell
 conda install -c bioconda seqkit
 ```
