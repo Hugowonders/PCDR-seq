@@ -54,10 +54,12 @@ FASTQ files of 2800M control DNA amplified by PCDR are accessible in the Sequenc
 wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.0/sratoolkit.3.0.0-ubuntu64.tar.gz && \
 # unzip it
 tar zxvf sratoolkit.3.0.0-ubuntu64.tar.gz
+rm sratoolkit.3.0.0-ubuntu64.tar.gz
 # download fastq files to the working directory using the prefetch utility
 ./sratoolkit.3.0.0-ubuntu64.tar.gz/bin/prefetch -T C -O $WD && \
 # copy fastq files to the working directory
 cp $WD/SRR21589082/* $WD
+rm -r $WD/SRR21589082
 ```
 In following sections, we would take the two paired PCDR files in the archive, namely 2800M_PCDR1.fastq.gz and 2800M_PCDR2.fastq.gz as an example to introduce the data analysis process in detail.
 
@@ -79,5 +81,15 @@ Next we use FLASH to merge paired reads. Note that the `--lowercase-overhang` (`
 ./flash 2800m_rd1.fq.gz 2800m_rd2.fq.gz -l -m 5 -x 0.2 -M 250 -O -z -d $WD -o 2800m.fq.gz
 ```
 
-## Citation
+## PCDR amplicon separation
+This process is based on a regular expression matching pipline. Generally, the sequences of four primer sets, namely the forward (FW), reverse (RV), outer forward (OF), and outer reverse (OR) primer are used to match and extract amplicons in turn. Through this pipeline, four different amplicon types can be detected from the PCDR products for each STR, i.e., the shortest amplicon S (FW + RV), the medium amplicons M1 (OF + RV) and M2 (FW + OR), and the longest amplicon L (OF + OR) are seprated in different FASTQ files for futher analysis.
+
+These primer sets are provided in this repository. Directly clone it to the working directroy.
+```
+git clone 
+```
+
+
+
+## Original manuscript
 Huang, Yuguo and Zhang, Haijun and Wei, Yifan and Cao, Yueyan and Zhu, Qiang and Li, Xi and Shan, Tiantian and Dai, Xuan and Zhang, Ji, Characterizing the Amplification of STR Markers in Multiplex Polymerase Chain Displacement Reaction Using Massively Parallel Sequencing. Available at SSRN: [https://ssrn.com/abstract=4184676](https://ssrn.com/abstract=4184676)
