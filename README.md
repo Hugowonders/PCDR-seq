@@ -66,7 +66,7 @@ In following sections, we would take the two paired PCDR files in the archive, n
 
 ## Quality control
 First we use fastp to remove adaptors and low-quality reads.
-```
+```shell
 # activate conda enviroment
 conda activate
 
@@ -77,7 +77,7 @@ fastp -i 2800M_PCDR_read1.fastq.gz -I 2800M_PCDR_read2.fastq.gz --dont_eval_dupl
 
 ## Merging paired reads
 Next we use FLASH to merge paired reads. Note that the `--lowercase-overhang` (`-l`) is used so that truncated STR merging can be identified.
-```
+```shell
 # merge paired reads with the miniumum overlap between two reads (`-m`) of 5 bp and the maximum overlap (`-M`) of 250 bp. The maximum mismatch density (`-x`) was set as 0.2. Outies combining (`-O`) is allowed.
 ./flash 2800m_rd1.fastq.gz 2800m_rd2.fastq.gz -l -z -c -m 5 -x 0.2 -M 250 -O > 2800m.fastq.gz
 ```
@@ -86,7 +86,7 @@ Next we use FLASH to merge paired reads. Note that the `--lowercase-overhang` (`
 This process is based on a regular expression matching pipline. Generally, the sequences of four primer sets, namely the forward (FW), reverse (RV), outer forward (OF), and outer reverse (OR) primer are used to match and extract amplicons in turn. Through this pipeline, four different amplicon types can be detected from the PCDR products for each STR, i.e., the shortest amplicon S (FW + RV), the medium amplicons M1 (OF + RV) and M2 (FW + OR), and the longest amplicon L (OF + OR) are seprated in different FASTQ files for futher analysis.
 
 Primer sets used for amplicon separating and a FDSTools configuration file are provided in this repository. Directly clone it to the working directroy.
-```
+```shell
 git clone https://github.com/Hugowonders/PCDR-seq.git
 cp ./PCDR-seq/primer* ./PCDR-seq/fdstools.conf $WD
 rm -r ./PCDR-seq
@@ -145,7 +145,7 @@ Now we had four separated FASTQ files storing each type of PCDR amplicon. These 
 
 ## STR genotyping
 We take the shortest amplicon S as example. [FDSTools](https://fdstools.nl) is used for STR genotyping in our muscript.
-```
+```shell
 conf=fdstools.conf
 # designating alleles using the tssv tool
 fdstools tssv $conf 2800m_S.fastq.gz | \
