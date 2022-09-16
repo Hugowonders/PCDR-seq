@@ -29,8 +29,10 @@ The modified version of [FLASH 1.2.11](https://github.com/Jerrythafast/FLASH-low
 git clone https://github.com/Jerrythafast/FLASH-lowercase-overhang.git
 # change to the FLASH directory
 cd FLASH-lowercase-overhang
+
 # compile the files
 make
+
 # now the executable file named "flash" can be copied to the working directory
 cp ./flash $WD
 cd $WD
@@ -54,13 +56,14 @@ To install the latest version, you need to make sure you're installing using `pi
 ## Sequencing data
 FASTQ files of 2800M control DNA amplified by PCDR are accessible in the Sequence Read Archive database (SRR21589082 in BioProject PRJNA858989). We recommend downloading the whole archive using [SRA Toolkit](https://github.com/ncbi/sra-tools).
 ```shell
-# download the pre-compiled version
+# download the pre-compiled version and unzip it
 wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.0/sratoolkit.3.0.0-ubuntu64.tar.gz && \
-# unzip it
 tar zxvf sratoolkit.3.0.0-ubuntu64.tar.gz
 rm sratoolkit.3.0.0-ubuntu64.tar.gz
+
 # download fastq files to the working directory using the prefetch utility
 ./sratoolkit.3.0.0-ubuntu64.tar.gz/bin/prefetch -T C -O $WD && \
+
 # copy fastq files to the working directory
 cp $WD/SRR21589082/* $WD
 rm -r $WD/SRR21589082
