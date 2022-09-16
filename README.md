@@ -42,7 +42,7 @@ https://anaconda.org/bioconda/seqkit/badges/version.svg)](https://anaconda.org/b
 conda install -c bioconda seqkit
 ```
 
-[FDSTools](https://fdstools.nl/) is a software package for forensisc sequencing data analysis. The software is written in Python and can be installed using `pip`. Please make sure Python 3 are available on your system.
+[FDSTools](https://fdstools.nl) is a software package for forensisc sequencing data analysis. The software is written in Python and can be installed using `pip`. Please make sure Python 3 are available on your system.
 ```shell
 pip install fdstools
 ```
@@ -72,23 +72,23 @@ conda activate
 
 # quality control of paired fastq files and name them properly.
 fastp -i 2800M_PCDR_read1.fastq.gz -I 2800M_PCDR_read2.fastq.gz --dont_eval_duplication \
--o 2800m_rd1.fq.gz -O 2800m_rd2.fq.gz
+-o 2800m_rd1.fastq.gz -O 2800m_rd2.fastq.gz
 ```
 
 ## Merging paired reads
 Next we use FLASH to merge paired reads. Note that the `--lowercase-overhang` (`-l`) is used so that truncated STR merging can be identified.
 ```
 # merge paired reads with the miniumum overlap between two reads (`-m`) of 5 bp and the maximum overlap (`-M`) of 250 bp. The maximum mismatch density (`-x`) was set as 0.2. Outies combining (`-O`) is allowed.
-./flash 2800m_rd1.fq.gz 2800m_rd2.fq.gz -l -z -c -m 5 -x 0.2 -M 250 -O > 2800m.fastq.gz
+./flash 2800m_rd1.fastq.gz 2800m_rd2.fastq.gz -l -z -c -m 5 -x 0.2 -M 250 -O > 2800m.fastq.gz
 ```
 
 ## PCDR amplicon separation
 This process is based on a regular expression matching pipline. Generally, the sequences of four primer sets, namely the forward (FW), reverse (RV), outer forward (OF), and outer reverse (OR) primer are used to match and extract amplicons in turn. Through this pipeline, four different amplicon types can be detected from the PCDR products for each STR, i.e., the shortest amplicon S (FW + RV), the medium amplicons M1 (OF + RV) and M2 (FW + OR), and the longest amplicon L (OF + OR) are seprated in different FASTQ files for futher analysis.
 
-These primer sets are provided in this repository. Directly clone it to the working directroy.
+Primer sets used for amplicon separating and a FDSTools configuration file are provided in this repository. Directly clone it to the working directroy.
 ```
 git clone https://github.com/Hugowonders/PCDR-seq.git
-cp ./PCDR-seq/primer* $WD
+cp ./PCDR-seq/primer* ./PCDR-seq/fdstools.conf $WD
 rm -r ./PCDR-seq
 ```
 
@@ -97,7 +97,7 @@ Now we can seprate each amplicon type using [SeqKit](https://bioinf.shenwei.me/s
 # make sure all needed files are in the working directroy
 cd $WD
 
-fq=2800m.fq.gz
+fq=2800m.fastq.gz
 fw=primer1_fw
 rv=primer2_rv
 of=primer3_of
@@ -107,16 +107,54 @@ or=primer4_or
 conda activate
 
 # write read id into a pool
-seqkit seq 2800m.fq.gz -n -o id.pool
+seqkit seq $fq -n -o id.pool
 
-# extract amplicon L and write into a new fatq file
+# extract amplicon L using $of and $or and write into a new fastq file
 seqkit grep -i -s $fq -f $of | seqkit grep -i -s -f $or -o 2800m_L.fastq.gz
 
-# remove amplicon L from original fastq
+# remove amplicon L using $or from original fastq
 seqkit seq -n 2800m_L.fastq.gz -o L.id
-cat 
-```
+cat id.pool L.id | sort -n | uniq -u > id_sub1.pool
+seqkit -grep -i -n $fq -f id_sub1.pool -o 2800m_sub1.fastq.gz
 
+# now repeat this procedure to extract other amplicon types
+
+# extract amplicon M2 using $or
+seqkit grep -i -s 2800m_sub1.gastq.gz -f $or -o 2800m_M2.fastq.gz
+
+# remove amplicon M2 from sub-fastq
+seqkit seq -n 2800m_sub1.fastq.gz -o M2.id
+cat id_sub1.pool M2.id | sort -n | uniq -u > id_sub2.pool
+seqkit grep -i -n 2800m_sub1.fastq.gz -f id_sub2.pool -o 2800m_sub2.fastq.gz
+
+# extract amplicon M1 using $of
+seqkit grep -i -s 2800m_sub2.gastq.gz -f $of -o 2800m_M1.fastq.gz
+
+# remove amplicon M1 from sub-fastq
+seqkit seq -n 2800m_sub1.fastq.gz -o M1.id
+cat id_sub2.pool M1.id | sort -n | uniq -u > id_sub3.pool
+seqkit grep -i -n 2800m_sub2.fastq.gz -f id_sub3.pool -o 2800m_sub3.fastq.gz
+
+# extract amplicon S
+seqkit grep -i -s 2800m_sub3.gastq.gz -f $fw | seqkit grep -i -s -f %rv -o 2800m_S.fastq.gz
+
+# remove intermediate files
+rm *id* *sub*
+```
+Now we had four separated FASTQ files storing each type of PCDR amplicon. These file can be further processed for STR analysis.
+
+## STR genotyping
+We take the shortest amplicon S as example. [FDSTools](https://fdstools.nl) is used for STR genotyping in our muscript.
+```
+conf=fdstools.conf
+# designating alleles using the tssv tool
+fdstools tssv $conf 2800m_S.fastq.gz | \
+# mark stutters using stuttermark, +/- stutter were set as 10% and 30% respectively.
+fdstools stuttermark -s=-1:30,+1:10 -l $conf - | \
+# convert seuqence alleles to allele name
+fdstools seqconvert -l $conf allelename - 2800m.S.str
+```
+The final output is a plain text file which contains the STR information of 2800M. Other STR files can be analyzed likewise.
 
 ## Original manuscript
 Huang, Yuguo and Zhang, Haijun and Wei, Yifan and Cao, Yueyan and Zhu, Qiang and Li, Xi and Shan, Tiantian and Dai, Xuan and Zhang, Ji, Characterizing the Amplification of STR Markers in Multiplex Polymerase Chain Displacement Reaction Using Massively Parallel Sequencing. Available at SSRN: [https://ssrn.com/abstract=4184676](https://ssrn.com/abstract=4184676)
