@@ -34,7 +34,7 @@ make
 # now the executable file named "flash" can be copied to the working directory
 cp ./flash $WD
 cd $WD
-rm -r FLASH-lowercase-overhang
+rm -rf FLASH-lowercase-overhang
 ```
 
 [SeqKit](https://bioinf.shenwei.me/seqkit) is used for PCDR amplicon separation through a regular expression matching pipeline. The newest version of Seqkit can be easily installed using bioconda.
