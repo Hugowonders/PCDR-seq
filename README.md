@@ -62,7 +62,7 @@ tar zxvf sratoolkit.3.0.0-ubuntu64.tar.gz
 rm sratoolkit.3.0.0-ubuntu64.tar.gz
 
 # download fastq files to the working directory using the prefetch utility
-./sratoolkit.3.0.0-ubuntu64.tar.gz/bin/prefetch -T C -O $WD && \
+./sratoolkit.3.0.0-ubuntu64/bin/prefetch -T fastq SRR21589082 -O $WD
 
 # copy fastq files to the working directory
 cp $WD/SRR21589082/* $WD
@@ -77,7 +77,7 @@ We use Fastp to remove adaptors and low-quality reads.
 conda activate
 
 # quality control of paired fastq files and name them properly.
-fastp -i 2800M_PCDR_read1.fastq.gz -I 2800M_PCDR_read2.fastq.gz --dont_eval_duplication \
+fastp -i 2800M_PCDR1.fastq.gz -I 2800M_PCDR2.fastq.gz --dont_eval_duplication \
 -o 2800m_rd1.fastq.gz -O 2800m_rd2.fastq.gz
 ```
 
@@ -95,14 +95,12 @@ Primer sets used for amplicon separating and an FDSTools configuration file are 
 ```shell
 git clone https://github.com/Hugowonders/PCDR-seq.git
 cp ./PCDR-seq/primer* ./PCDR-seq/fdstools.conf $WD
-rm -r ./PCDR-seq
+rm -rf ./PCDR-seq
 ```
 
 Now we can separate each amplicon type using SeqKit.
 ```
 # make sure all needed files are in the working directory
-cd $WD
-
 fq=2800m.fastq.gz
 fw=primer1_fw
 rv=primer2_rv
@@ -113,7 +111,7 @@ or=primer4_or
 conda activate
 
 # write read id into a pool
-seqkit seq $fq -n -o id.pool
+seqkit seq -n $fq -o id.pool
 
 # extract amplicon L using $of and $or and write into a new fastq file
 seqkit grep -i -s $fq -f $of | seqkit grep -i -s -f $or -o 2800m_L.fastq.gz
@@ -121,31 +119,32 @@ seqkit grep -i -s $fq -f $of | seqkit grep -i -s -f $or -o 2800m_L.fastq.gz
 # remove amplicon L using $or from original fastq
 seqkit seq -n 2800m_L.fastq.gz -o L.id
 cat id.pool L.id | sort -n | uniq -u > id_sub1.pool
-seqkit -grep -i -n $fq -f id_sub1.pool -o 2800m_sub1.fastq.gz
+seqkit grep -i -n $fq -f id_sub1.pool -o 2800m_sub1.fastq.gz
 
 # now repeat this procedure to extract other amplicon types
 
-# extract amplicon M2 using $or
-seqkit grep -i -s 2800m_sub1.gastq.gz -f $or -o 2800m_M2.fastq.gz
+# extract amplicon M2 using $or and $fw
+seqkit grep -i -s 2800m_sub1.fastq.gz -f $or | seqkit grep -i -s -f $fw -o 2800m_M2.fastq.gz
 
 # remove amplicon M2 from sub-fastq
-seqkit seq -n 2800m_sub1.fastq.gz -o M2.id
+seqkit seq -n 2800m_M2.fastq.gz -o M2.id
 cat id_sub1.pool M2.id | sort -n | uniq -u > id_sub2.pool
 seqkit grep -i -n 2800m_sub1.fastq.gz -f id_sub2.pool -o 2800m_sub2.fastq.gz
 
-# extract amplicon M1 using $of
-seqkit grep -i -s 2800m_sub2.gastq.gz -f $of -o 2800m_M1.fastq.gz
+# extract amplicon M1 using $of and $rv
+seqkit grep -i -s 2800m_sub2.fastq.gz -f $of | seqkit grep -i -s -f $rv -o 2800m_M1.fastq.gz
 
 # remove amplicon M1 from sub-fastq
-seqkit seq -n 2800m_sub1.fastq.gz -o M1.id
+seqkit seq -n 2800m_M1.fastq.gz -o M1.id
 cat id_sub2.pool M1.id | sort -n | uniq -u > id_sub3.pool
 seqkit grep -i -n 2800m_sub2.fastq.gz -f id_sub3.pool -o 2800m_sub3.fastq.gz
 
 # extract amplicon S
-seqkit grep -i -s 2800m_sub3.gastq.gz -f $fw | seqkit grep -i -s -f %rv -o 2800m_S.fastq.gz
+seqkit grep -i -s 2800m_sub3.fastq.gz -f $fw | seqkit grep -i -s -f $rv -o 2800m_S.fastq.gz
 
 # remove intermediate files
-rm *id* *sub*
+rm *sub*
+rm *id* 
 ```
 Now we had four separated FASTQ files storing each type of PCDR amplicon. These files can be further processed for STR analysis.
 
@@ -160,7 +159,7 @@ fdstools stuttermark -s=-1:30,+1:10 -l $conf - | \
 # convert seuqence alleles to allele name
 fdstools seqconvert -l $conf allelename - 2800m.S.str
 ```
-The final output is a plain text file that contains the STR allelic information of 2800M. Other STR files can be analyzed likewise.
+The final output is a plain text file that contains the STR allelic information of 2800M. Other FASTQ files can be analyzed likewise.
 
 ## Original manuscript
 Huang, Yuguo and Zhang, Haijun and Wei, Yifan and Cao, Yueyan and Zhu, Qiang and Li, Xi and Shan, Tiantian and Dai, Xuan and Zhang, Ji, Characterizing the Amplification of STR Markers in Multiplex Polymerase Chain Displacement Reaction Using Massively Parallel Sequencing. Available at SSRN: [https://ssrn.com/abstract=4184676](https://ssrn.com/abstract=4184676)
