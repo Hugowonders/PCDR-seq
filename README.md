@@ -80,4 +80,4 @@ Next we use FLASH to merge paired reads. Note that the `--lowercase-overhang` (`
 ```
 
 ## Citation
-Huang, Yuguo and Zhang, Haijun and Wei, Yifan and Cao, Yueyan and Zhu, Qiang and Li, Xi and Shan, Tiantian and Dai, Xuan and Zhang, Ji, Characterizing the Amplification of STR Markers in Multiplex Polymerase Chain Displacement Reaction Using Massively Parallel Sequencing. Available at SSRN: [](https://ssrn.com/abstract=4184676)
+Huang, Yuguo and Zhang, Haijun and Wei, Yifan and Cao, Yueyan and Zhu, Qiang and Li, Xi and Shan, Tiantian and Dai, Xuan and Zhang, Ji, Characterizing the Amplification of STR Markers in Multiplex Polymerase Chain Displacement Reaction Using Massively Parallel Sequencing. Available at SSRN: [https://ssrn.com/abstract=4184676](https://ssrn.com/abstract=4184676)
