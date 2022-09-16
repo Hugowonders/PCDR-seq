@@ -1,7 +1,7 @@
 # PCDR-seq
 This repository is a supplementary for the manuscript entitled "Characterizing the amplification of STR markers in multiplex polymerase chain displacement reaction using massively parallel sequencing". The scripts below demonstrate how to obtain STR information from pair-end Illumina FASTQ files of PCDR products for each type of amplicons ab initio. First, sequencing quality is checked using [Fastp](https://github.com/OpenGene/fastp). Then, pair-end reads are merged using a modified version of [FLASH 1.2.11](https://github.com/Jerrythafast/FLASH-lowercase-overhang). Next, [SeqKit](https://bioinf.shenwei.me/seqkit) is used to separate different PCDR amplicons from the merged FASTQ file. Finally, STR were genotyped using [FDSTools](https://fdstools.nl/). 
 
-Codes in this script were tested on an AMD Ryzen PC running Ubuntu 20.04. Other UNIX/Linux systems are plausible but the performance is not guaranteed. Please not that the script is an early-stage implementation, please contact the corresponding author of the manuscript if you encounter any bugs.
+Codes in this script were tested on an AMD RYZEN PC running Ubuntu 20.04 LTS. Other UNIX/Linux systems are plausible but the performance is not guaranteed. Please not that the script is an early-stage implementation, please contact the corresponding author of the manuscript if you encounter any bugs.
 
 ## Working directory
 Fisrt let's create a directory named "PCDR-seq".
@@ -54,22 +54,21 @@ FASTQ files of 2800M control DNA amplified by PCDR are accessible in the Sequenc
 wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.0/sratoolkit.3.0.0-ubuntu64.tar.gz && \
 # unzip it
 tar zxvf sratoolkit.3.0.0-ubuntu64.tar.gz
-# download data to the working directory using the prefetch utility
-./sratoolkit.3.0.0-ubuntu64.tar.gz/bin/prefetch SRR21589082 -O $WD
-# unzip the .sra file and copy all fatq.gz files to the working directory
-./sratoolkit.3.0.0-ubuntu64.tar.gz/bin/fastq-dump --gzip --split-3 $WD/SRR21589082/SRR21589082.sra && \
-cp $WD/SRR21589082/*.fastq.gz $WD
+# download fastq files to the working directory using the prefetch utility
+./sratoolkit.3.0.0-ubuntu64.tar.gz/bin/prefetch -T C -O $WD && \
+# copy fastq files to the working directory
+cp $WD/SRR21589082/* $WD
 ```
-In following sections, we would take the two PCDR files in the archive, namely 2800M_PCDR_read1.fastq.gz and 2800M_PCDR_read2.fastq.gz as an example to introduce the data analysis process in detail.
+In following sections, we would take the two paired PCDR files in the archive, namely 2800M_PCDR1.fastq.gz and 2800M_PCDR2.fastq.gz as an example to introduce the data analysis process in detail.
 
 ## Quality control
-First we use fastp to remove low-quality reads and reads less than 60 nt.
+First we use fastp to remove adaptors and low-quality reads.
 ```
 # activate conda enviroment
 conda activate
 
-# quality control of paired fastq files.
-fastp -i 2800M_PCDR_read1.fastq.gz -I 2800M_PCDR_read2.fastq.gz -l 60 --dont_eval_duplication \
+# quality control of paired fastq files and name them properly.
+fastp -i 2800M_PCDR_read1.fastq.gz -I 2800M_PCDR_read2.fastq.gz --dont_eval_duplication \
 -o 2800m_rd1.fq.gz -O 2800m_rd2.fq.gz
 ```
 
@@ -79,3 +78,6 @@ Next we use FLASH to merge paired reads. Note that the `--lowercase-overhang` (`
 # merge paired reads with the miniumum overlap between two reads (`-m`) of 5 bp and the maximum overlap (`-M`) of 250 bp. The maximum mismatch density (`-x`) was set as 0.2.
 ./flash 2800m_rd1.fq.gz 2800m_rd2.fq.gz -l -m 5 -x 0.2 -M 250 -O -z -d $WD -o 2800m.fq.gz
 ```
+
+## Citation
+Huang, Yuguo and Zhang, Haijun and Wei, Yifan and Cao, Yueyan and Zhu, Qiang and Li, Xi and Shan, Tiantian and Dai, Xuan and Zhang, Ji, Characterizing the Amplification of STR Markers in Multiplex Polymerase Chain Displacement Reaction Using Massively Parallel Sequencing. Available at SSRN: [](https://ssrn.com/abstract=4184676)
