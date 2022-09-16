@@ -14,7 +14,7 @@ cd $WD
 This is the default working directory for data storage and analysis in this script. You can also allocate another directory while the path should be declared when running the code.
 
 ## Software installation
-For dependency management, we prefer to use [bioconda](https://anaconda.org/bioconda) for software installation
+For dependency management, we prefer to use [bioconda](https://anaconda.org/bioconda) for software installation if available.
 [Fastp](https://github.com/OpenGene/fastp) is adopted for sequencing quality control.
 
 [![install with conda](
