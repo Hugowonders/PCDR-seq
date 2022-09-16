@@ -33,6 +33,7 @@ cd FLASH-lowercase-overhang
 make
 # now the executable file named "flash" can be copied to the working directory
 cp ./flash $WD
+cd $WD
 rm -r FLASH-lowercase-overhang
 ```
 
