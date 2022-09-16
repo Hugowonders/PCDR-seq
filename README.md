@@ -31,6 +31,7 @@ cd FLASH-lowercase-overhang
 make
 # now the excutable file named "flash" can be copied to the working directory
 cp ./flash $WD
+rm -r FLASH-lowercase-overhang
 ```
 
 [SeqKit](https://bioinf.shenwei.me/seqkit) is used for PCDR amplicon separation through a regular expression matching pipeline. The newest version of Seqkit can be easilyt installed unsing bioconda.
@@ -77,8 +78,8 @@ fastp -i 2800M_PCDR_read1.fastq.gz -I 2800M_PCDR_read2.fastq.gz --dont_eval_dupl
 ## Merging paired reads
 Next we use FLASH to merge paired reads. Note that the `--lowercase-overhang` (`-l`) is used so that truncated STR merging can be identified.
 ```
-# merge paired reads with the miniumum overlap between two reads (`-m`) of 5 bp and the maximum overlap (`-M`) of 250 bp. The maximum mismatch density (`-x`) was set as 0.2.
-./flash 2800m_rd1.fq.gz 2800m_rd2.fq.gz -l -m 5 -x 0.2 -M 250 -O -z -d $WD -o 2800m.fq.gz
+# merge paired reads with the miniumum overlap between two reads (`-m`) of 5 bp and the maximum overlap (`-M`) of 250 bp. The maximum mismatch density (`-x`) was set as 0.2. Outies combining (`-O`) is allowed.
+./flash 2800m_rd1.fq.gz 2800m_rd2.fq.gz -l -z -c -m 5 -x 0.2 -M 250 -O > 2800m.fastq.gz
 ```
 
 ## PCDR amplicon separation
@@ -86,9 +87,35 @@ This process is based on a regular expression matching pipline. Generally, the s
 
 These primer sets are provided in this repository. Directly clone it to the working directroy.
 ```
-git clone 
+git clone https://github.com/Hugowonders/PCDR-seq.git
+cp ./PCDR-seq/primer* $WD
+rm -r ./PCDR-seq
 ```
 
+Now we can seprate each amplicon type using [SeqKit](https://bioinf.shenwei.me/seqkit).
+```
+# make sure all needed files are in the working directroy
+cd $WD
+
+fq=2800m.fq.gz
+fw=primer1_fw
+rv=primer2_rv
+of=primer3_of
+or=primer4_or
+
+# activate conda environment
+conda activate
+
+# write read id into a pool
+seqkit seq 2800m.fq.gz -n -o id.pool
+
+# extract amplicon L and write into a new fatq file
+seqkit grep -i -s $fq -f $of | seqkit grep -i -s -f $or -o 2800m_L.fastq.gz
+
+# remove amplicon L from original fastq
+seqkit seq -n 2800m_L.fastq.gz -o L.id
+cat 
+```
 
 
 ## Original manuscript
