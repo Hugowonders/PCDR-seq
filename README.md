@@ -1,4 +1,4 @@
-# PCDR-seq
+# PCDR-seq Data Analysis
 This repository is a supplementary for the manuscript entitled "Characterizing the amplification of STR markers in multiplex polymerase chain displacement reaction using massively parallel sequencing". The scripts below demonstrate how to obtain STR information from pair-end Illumina FASTQ files of PCDR products for each type of amplicons ab initio. First, sequencing quality is checked using [Fastp](https://github.com/OpenGene/fastp). Then, pair-end reads are merged using a modified version of [FLASH 1.2.11](https://github.com/Jerrythafast/FLASH-lowercase-overhang). Next, [SeqKit](https://bioinf.shenwei.me/seqkit) is used to separate different PCDR amplicons from the merged FASTQ file. Finally, STRs were genotyped using [FDSTools](https://fdstools.nl/). 
 
 Codes in this script were tested on an AMD RYZEN PC running Ubuntu 20.04 LTS. Other UNIX/Linux systems are plausible but the performance is not guaranteed. Please note that the script is an early-stage implementation. Please contact the corresponding author of the manuscript if you encounter any bugs.
