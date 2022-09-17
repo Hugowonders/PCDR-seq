@@ -84,7 +84,8 @@ fastp -i 2800M_PCDR1.fastq.gz -I 2800M_PCDR2.fastq.gz --dont_eval_duplication \
 ## Merging paired reads
 Next, we use FLASH to merge paired reads. Note that the `--lowercase-overhang` (`-l`) is used so that truncated STR merging can be identified.
 ```shell
-# merge paired reads with the minimum overlap between two reads (`-m`) of 5 bp and the maximum overlap (`-M`) of 250 bp. The maximum mismatch density (`-x`) was set as 0.2. Outies combining (`-O`) is allowed.
+# merge paired reads with the minimum overlap between two reads (`-m`) of 5 bp and the maximum overlap (`-M`) of 250 bp. 
+# The maximum mismatch density (`-x`) was set as 0.2. Outies combining (`-O`) is allowed.
 ./flash 2800m_rd1.fastq.gz 2800m_rd2.fastq.gz -l -z -c -m 5 -x 0.2 -M 250 -O > 2800m.fastq.gz
 ```
 
