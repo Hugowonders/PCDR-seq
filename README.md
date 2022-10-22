@@ -164,4 +164,6 @@ The final output is a plain text file that contains the STR allelic information 
 
 ## Original manuscript
 For more details about our work, please refer to the original manuscript:
-Huang, Yuguo and Zhang, Haijun and Wei, Yifan and Cao, Yueyan and Zhu, Qiang and Li, Xi and Shan, Tiantian and Dai, Xuan and Zhang, Ji, Characterizing the Amplification of STR Markers in Multiplex Polymerase Chain Displacement Reaction Using Massively Parallel Sequencing. Available at SSRN: [https://ssrn.com/abstract=4184676](https://ssrn.com/abstract=4184676)
+Yuguo Huang, Haijun Zhang, Yifan Wei, Yueyan Cao, Qiang Zhu, Xi Li, Tiantian Shan, Xuan Dai, Ji Zhang,
+Characterizing the amplification of STR markers in multiplex polymerase chain displacement reaction using massively parallel sequencing,
+Forensic Science International: Genetics, 2022, 102802, ISSN 1872-4973, https://doi.org/10.1016/j.fsigen.2022.102802.
